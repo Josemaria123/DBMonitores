@@ -1,27 +1,36 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import psycopg2
-#Connection to the DB
-conn = psycopg2.connect(host = "", database = "MonitoresMercadoLibre", user = "postgres", password = "grinblue9")
 
-#1. Creo el cursor
-cur = con.cursor()
+#Connection to the database
+def dbconection():
 
-# 2. Ejecuto algun query
-cur.execute("CREATE TABLE monitores (Id INTEGER PRIMARY KEY, Nombre VARCHAR(50), Precio INTEGER)")
+    try:
+        conn = psycopg2.connect(host="127.0.0.1", database = "MonitoresMercadoLibre", user = "postgres", password = "grinblue9", port="5432")
+        
+        print("Conexion Exitosa")
+    except (Exception, Error) as error:
+        print("Error while connecting to PostgreSQL", error)
 
-# 3. Guardo los cambios
-cur.commit()
+    #1. Creo el cursor
+    cur = conn.cursor()
 
-# Cierro el cursor
-cur.close()
+    # 2. Ejecuto algun query
+    #Crear tabla de monitores
+    crearTabla = "CREATE TABLE monitores (id INTEGER PRIMARY KEY, nombre VARCHAR(50), precio INTEGER)" 
+    cur.execute(crearTabla)
+    #Guardar los cambios
+    conn.commit()
+    # 3. Cierro el cursor
+    cur.close()
 
-#Crear tabla de monitores
+    conn.close()
 
-PATH = "/Users/josemaria/Desktop/proyectowebscrapping/chromedriver"
+PATH = "/Users/josemaria/Desktop/proyectoMonitores/chromedriver"
 driver = webdriver.Chrome(PATH)
 driver.get('https://listado.mercadolibre.cl/monitores#D[A:monitores]')
 
+dbconection()
 try:
 
     nombre_producto = driver.find_element_by_class_name('ui-search-item__title')
@@ -35,4 +44,3 @@ finally:
 
 
 
-conn.close()
