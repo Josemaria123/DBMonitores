@@ -39,7 +39,8 @@ def recopilarInfo(url):
 
     
 for page in paginas_monitores:
-    print(page)
+    print("The URL is " + page)
+    print("\n")
     recopilarInfo(page)
     
 driver.quit()
